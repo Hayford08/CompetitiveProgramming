@@ -1,6 +1,0 @@
-{
-  "files.associations": {
-    "*.ms": "BluespecSystemVerilog",
-    "iostream": "cpp"
-  }
-}
