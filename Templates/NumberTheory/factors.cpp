@@ -39,3 +39,28 @@ vector<int> count_multiples(const vector<int> &nums) {
   }
   return cnt;
 }
+
+constexpr int MOD = 1e9 + 7;
+constexpr int INV_MOD2 = 500000004;
+int sum_of_divisors_from_1_to_n(int n) {
+
+  auto range_sum = [&](int a, int b) -> int {
+    auto sum = [&](int x) -> int {
+      x %= MOD;
+      int res = (x * (x + 1)) % MOD;
+      return (res * INV_MOD2) % MOD;
+    };
+  
+    return (sum(b) - sum(a - 1) + MOD) % MOD;
+  };
+
+  int ans = 0;
+  int i = 1;
+  while (i <= n){
+    int q = n / i;
+    int nxt = n / q;
+    ans = (ans + (range_sum(i, min(n, nxt)) * q) % MOD) % MOD;
+    i = nxt + 1;
+  }
+  return ans;
+} 
