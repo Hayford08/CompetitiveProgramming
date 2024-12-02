@@ -1,44 +1,43 @@
-#include <iostream>
-#include <vector>
+#include <bits/stdc++.h>
 using namespace std;
 
-#define int long long
-constexpr int MAXN = 2e5 + 5;
-vector<int> adj[MAXN];
-vector<int> arr(MAXN);
-vector<int> sum(MAXN);
-int n, ans, res;
+template <typename T, typename Merge, typename Update>
+struct ReRootDp {
+  const vector<vector<int>>& adj;
+  T base;
+  vector<T> res;
+  Merge merge;
+  Update update;
 
-void dfs(int u, int par = -1, int d = 0){
-  res += d * arr[u];
+  ReRootDp(const vector<vector<int>>& adj, T base, Merge merge, Update update)
+      : adj(adj), base(base), res(adj.size(), base), merge(merge), update(update) {}
 
-  for (auto &v : adj[u]){
-    if (v == par){
-      continue;
+  inline T dfs(int u, int par = -1) {
+    T curr = base;
+    for (const int& v : adj[u]) {
+      if (v == par) continue;
+      curr = merge(curr, dfs(v, u));
     }
-    dfs(v, u, d + 1);
-    sum[u] += sum[v];
+    return res[u] = curr;
   }
-}
 
-
-void reroot(int u, int par = -1){
-  ans = max(ans, res);
-
-  for (auto &v : adj[u]){
-    if (v == par){
-      continue;
+  inline void dfs2(int u, int par = -1) {
+    for (const int& v : adj[u]) {
+      if (v == par) continue;
+      T nval = update(res[u], res[v]);
+      res[v] = merge(res[v], nval);
+      dfs2(v, u);
     }
-    res -= sum[v];
-    sum[u] -= sum[v];
-    res += sum[u];
-    sum[v] += sum[u];
-
-    reroot(v, u);
-
-    sum[v] -= sum[u];
-    res -= sum[u];
-    sum[u] += sum[v];
-    res += sum[v];  
   }
+
+  inline void compute() {
+    dfs(0);
+    dfs2(0);
+  }
+};
+
+// Factory function to deduce Merge and Update types
+template <typename T, typename Merge, typename Update>
+ReRootDp<T, Merge, Update> make_ReRootDp(const vector<vector<int>>& adj, T base, Merge merge, Update update) {
+  return ReRootDp<T, Merge, Update>(adj, base, merge, update);
 }
