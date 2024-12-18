@@ -50,13 +50,14 @@ vector<int> spf(int x) {
 vector<int> primes;
 vector<bool> marked;
 void sieve(int n) {
-  primes;
-  marked = vector<bool>(n + 1);
-  for (int i = 2; i <= n; i++) {
-    if (marked[i]) continue;
-    primes.push_back(i);
-    for (int j = 1ll * i * i; j <= n; j += i){
-      marked[j] = true;
+    primes.clear();
+    marked = vector<bool>(n + 1);
+    for (int i = 2; i <= n; i++) {
+      if (marked[i]) continue;
+      primes.push_back(i);
+      for (long long j = 1ll * i * i; j <= 1ll * n; j += i){
+        marked[j] = true;
+      }
     }
   }
-}
+  

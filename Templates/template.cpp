@@ -1,10 +1,16 @@
 #include <bits/stdc++.h>
 using namespace std;
-#define int long long
+#define int int64_t
 
 template <typename T>
 inline void print(const T& value) {
   std::cout << value << "\n";
+}
+
+template <typename T, typename... Args>
+inline void print(const T& first, const Args&... args) {
+  std::cout << first << " ";
+  print(args...);
 }
 
 // For interactive problems

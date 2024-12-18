@@ -1,28 +1,13 @@
 #include <iostream>
 #include <vector>
 using namespace std;
-constexpr long long MOD1 = 1e9 + 7;
-constexpr long long MOD2 = 1e9 + 9;
-
-long long pow_mod(long long a, long long b, long long mod){
-  long long ans = 1;
-  a %= mod;
-  while (b) {
-    if (b & 1){
-      ans = (ans * a) % mod;
-    }
-    b >>= 1;
-    a = (a * a) % mod;
-  }
-  return ans;
-}
 
 struct RabinKarp {
   int P1, P2;
   long long MOD1, MOD2;
   vector<long long> pref1, pref2, inv_pows1, inv_pows2;
 
-  RabinKarp(const string &s, int p1 = 53, int p2 = 911, long long mod1 = 1e9+7, long long mod2 = 1e9+9) {
+  RabinKarp(const string &s, int p1 = 419, int p2 = 911, long long mod1 = 1e9+7, long long mod2 = 1e9+9) {
     P1 = p1;
     P2 = p2;
     MOD1 = mod1;
@@ -60,6 +45,19 @@ struct RabinKarp {
       inv_pows2[i] = pwr2;
       pwr2 = (pwr2 * P2) % MOD2;
     }
+  }
+  
+  long long pow_mod(long long a, long long b, long long mod){
+    long long ans = 1;
+    a %= mod;
+    while (b) {
+      if (b & 1){
+        ans = (ans * a) % mod;
+      }
+      b >>= 1;
+      a = (a * a) % mod;
+    }
+    return ans;
   }
 
   pair<long long, long long> query(int l, int r) {
