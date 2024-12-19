@@ -13,6 +13,13 @@ inline void print(const T& first, const Args&... args) {
   print(args...);
 }
 
+inline void print(const vector<int> &v) {
+  for (const int &x : v) {
+    cout << x << " ";
+  }
+  cout << "\n";
+}
+
 // For interactive problems
 template <typename T>
 inline void print_flush(const T& value) {
