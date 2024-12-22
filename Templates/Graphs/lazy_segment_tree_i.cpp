@@ -74,7 +74,7 @@ struct LazySegmentTree {
     vector<bool> marked;
 
     int combine(int lval, int rval){
-      return 0; // modify to suit problem
+      return lval + rval;
     }
 
     void build(vector<int> &arr, int tidx, int tl, int tr){
@@ -134,10 +134,11 @@ struct LazySegmentTree {
       build(arr, 0, 0, n - 1);
     }
 
+    LazySegmentTree(int n) : n(n), tree(2 * n), marked(2 * n, 0) {}
+
     void range_update(int l, int r, int val){
       range_update(0, 0, n - 1, l, r, val);
     }
-
 
     int point_query(int pos){
       return point_query(0, 0, n - 1, pos);

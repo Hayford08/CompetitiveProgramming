@@ -8,15 +8,9 @@ constexpr int MX = 5e4 + 5;
 vector<vector<int>> factors(MX);
 
 void find_factors() {
-  for(int i = 1; i < MX; i++) {
-    for (int j = 1; j * j <= i; j++) {
-      if (i % j == 0) {
-        factors[i].push_back(j);
-        int other = i / j;
-        if (other != j) {
-          factors[i].push_back(other);
-        }
-      }
+  for (int i = 1; i < MX; i++) {
+    for (int m = i; m < MX; m += i) {
+      factors[m].push_back(i);
     }
   }
 }
