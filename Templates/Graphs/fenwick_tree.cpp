@@ -42,6 +42,11 @@ struct Fenwick{
     }
   }
 
+  void range_add(int l, int r, int delta) {
+    add(l, delta);
+    add(r + 1, -delta);
+  }
+
   int count_lt(int x){
     return sum(x - 1);
   }
