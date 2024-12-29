@@ -36,12 +36,9 @@ vector<int> spf(int x) {
   vector<int> res(x + 1);
   iota(res.begin(), res.end(), 0);
   for (int i = 2; i * i <= x; i++) {
-    if (res[i] == i) {
-      for (int j = i * i; j <= x; j += i) {
-        if (res[j] == j) {
-          res[j] = i;
-        }
-      }
+    if (res[i] != i) continue;
+    for (int j = i * i; j <= x; j += i) {
+      res[j] = i;
     }
   }
   return res;
@@ -60,4 +57,18 @@ void sieve(int n) {
     }
   }
 }
+
+/*
+constexpr int MAXN = 1e6 + 5;
+vector<bool> marked(MAXN);
+void sieve() {
+  marked[0] = marked[1] = true;
+  for (int i = 2; i * i < MAXN; i++) {
+    if (marked[i]) continue;
+    for (long long j = 1ll * i * i; j < 1ll * MAXN; j += i){
+      marked[j] = true;
+    }
+  }
+}
+*/
   

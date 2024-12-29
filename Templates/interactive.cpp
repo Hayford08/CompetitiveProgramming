@@ -3,7 +3,7 @@ using namespace std;
 #define int long long
 
 template <typename T>
-inline void print(const T& value) {
+inline void pout(const T& value) {
   std::cout << value << "\n";
 }
 

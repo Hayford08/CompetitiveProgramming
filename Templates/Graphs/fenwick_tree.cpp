@@ -43,6 +43,7 @@ struct Fenwick{
   }
 
   void range_add(int l, int r, int delta) {
+    if (l > r) return;
     add(l, delta);
     add(r + 1, -delta);
   }

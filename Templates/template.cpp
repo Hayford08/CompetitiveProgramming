@@ -12,17 +12,17 @@ using ordered_multiset = tree<T, null_type, less<T>, rb_tree_tag, tree_order_sta
 // X.order_of_key(k) returns count of elements strictly less than k.
 
 template <typename T>
-inline void print(const T& value) {
+inline void pout(const T& value) {
   std::cout << value << "\n";
 }
 
 template <typename T, typename... Args>
-inline void print(const T& first, const Args&... args) {
+inline void pout(const T& first, const Args&... args) {
   std::cout << first << " ";
-  print(args...);
+  pout(args...);
 }
 
-inline void print(const vector<int> &v) {
+inline void pout(const vector<int> &v) {
   for (const int &x : v) {
     cout << x << " ";
   }

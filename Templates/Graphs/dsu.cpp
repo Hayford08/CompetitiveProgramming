@@ -6,7 +6,8 @@ using namespace std;
 
 struct DSU{
   vector<int> parent, size;
-  DSU(int n) : parent(n), size(n, 1){
+  int components;
+  DSU(int n) : parent(n), size(n, 1), components(n) {
     iota(parent.begin(), parent.end(), 0);
   }
 
@@ -28,6 +29,7 @@ struct DSU{
     }
     size[parA] += size[parB];
     parent[parB] = parA;
+    components--;
     return true;
   }
 };
