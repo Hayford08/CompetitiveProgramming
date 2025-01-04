@@ -3,27 +3,27 @@ using namespace std;
 
 #define int int64_t
 struct Comb {
-  vector<long long> fact, invFact;
-  long long mod;
+  vector<int> fact, invFact;
+  int mod;
 
-  Comb(int n, long long mod = 1e9 + 7) : fact(n + 1), invFact(n + 1), mod(mod) {
+  Comb(int n, int mod) : fact(n + 1), invFact(n + 1), mod(mod) {
     fact[0] = 1;
     for (int i = 1; i <= n; i++) {
       fact[i] = (fact[i - 1] * i) % mod;
     }
-    long long inv = pow_mod(fact[n], mod - 2);
+    int inv = pow_mod(fact[n], mod - 2);
     for (int i = n; i >= 0; i--) {
       invFact[i] = inv;
       inv = (inv * i) % mod;
     }
   }
 
-  inline long long pow_mod(long long a, long long b, long long mod = 1e9 + 7) {
+  inline int pow_mod(int a, int b) {
     if (b < 0) {
       return pow_mod(pow_mod(a, -b), mod - 2);
     }
     a %= mod;
-    long long res = 1;
+    int res = 1;
     while (b > 0) {
       if (b & 1) {
         res = (res * a) % mod;
@@ -34,7 +34,7 @@ struct Comb {
     return res;
   }
 
-  inline long long nCr(int n, int r) {
+  inline int nCr(int n, int r) {
     if (r < 0 || r > n || r < 0) {
       return 0;
     }
@@ -54,6 +54,10 @@ struct Comb {
     a %= mod;
     b %= mod;
     return (a * b) % mod;
+  }
+
+  inline int stars_and_bars(int stars, int slots) {
+    return nCr(stars + slots - 1, slots - 1); 
   }
 };
 #undef int
