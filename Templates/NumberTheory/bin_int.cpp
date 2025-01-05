@@ -1,9 +1,10 @@
 #include<iostream>
 using namespace std;
 
+#define int int64_t
 string bin(int n) {
   string s = "";
-  while(n) {
+  while (n != 0) {
     s += (n % 2) + '0';
     n /= 2;
   }
@@ -18,3 +19,4 @@ int to_int(string s) {
   }
   return n;
 }
+#undef int
