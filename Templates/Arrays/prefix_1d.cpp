@@ -29,20 +29,22 @@ using namespace std;
 
 
 struct Prefix {
-  vector<int> pref;
+  vector<long long> pref;
   
-  Prefix(vector<int> &arr) : pref(arr) {
-    for (int i = 1; i < (int)pref.size(); i++) {
-      pref[i] += pref[i -  1];
+  Prefix(vector<int> &arr) {
+    int n = arr.size();
+    pref = vector<long long>(n, arr[0]);
+    for (int i = 1; i < n; i++) {
+      pref[i] = pref[i -  1] + arr[i];
     }
   }
 
-  int query(int r) {
+  long long query(int r) {
     if (r < 0) return 0;
     return pref[r];
   }
 
-  int query(int l, int r) {
+  long long query(int l, int r) {
     if (l > r || r < 0) {
       return 0;
     }

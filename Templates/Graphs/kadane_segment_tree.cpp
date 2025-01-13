@@ -3,7 +3,7 @@
 using namespace std;
 
 
-// Model problem: Finding the subsegment with the maximal sum i.e. Kadane's algorithm.
+// Model problem: Finding the subsegment with the maximal sum i.e. Kadane's algorithm and allow for point updates.
 constexpr long long DEFAULT = -1e18;
 struct Node {
   long long total, pref, suff, best;
