@@ -4,7 +4,7 @@
 #include <numeric>
 using namespace std;
 
-struct DSU{
+struct DSU {
   vector<int> parent, size;
   int components;
   DSU(int n) : parent(n), size(n, 1), components(n) {

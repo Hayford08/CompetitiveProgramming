@@ -1,82 +1,98 @@
-#include <iostream>
-#include <vector>
+#include <bits/stdc++.h>
 using namespace std;
 
-vector<vector<int>> g, rev_g;
-vector<bool> visited;
-vector<int> order, component;
+struct SCC {
+  int n;
+  vector<vector<int>> adj, rev_adj;
+  vector<bool> visited;
+  vector<int> order;
+  vector<int> components;
+  int num_components;
 
-void dfs1(int u){
-  visited[u] = true;
-  for (int v : g[u]){
-    if (!visited[v]){
+  SCC(int n) : n(n), adj(n), rev_adj(n), visited(n, false), components(n, -1), num_components(-1) {}
+
+  // Add a directed edge u -> v
+  inline void addEdge(int u, int v) {
+    adj[u].push_back(v);
+    rev_adj[v].push_back(u);
+  }
+
+  // First DFS pass on the original graph to determine the exit order
+  inline void dfs1(int u) {
+    visited[u] = true;
+    for (int v : adj[u]) {
+      if (visited[v]) continue;
       dfs1(v);
     }
-  }
-  order.push_back(u);
-}
-
-void dfs2(int u){
-  visited[u] = true;
-  component.push_back(u);
-  for (int v : rev_g[u]){
-    if (!visited[v]){
-      dfs2(v);
-    }
-  }
-}
-
-void create_scc(int n){
-  for (;;){
-    int u, v;
-    // get the edge
-    g[u].push_back(v);
-    rev_g[v].push_back(u);
+    order.push_back(u);
   }
 
-  visited.assign(n, false);
-  for (int u = 0; u < n; u++){
-    if (!visited[u]){
-      dfs1(u);
-    }
-  }
-  visited.assign(n, false);
-  reverse(order.begin(), order.end());
-  for (int u : order){
-    if (!visited[u]){
-      dfs2(u);
-      // do other stuff -- refer to create condensed graph
-
-      component.clear();
-    }
-  }
-}
-
-void create_condensed_graph(int n){
-  vector<bool> visited(n);
-  vector<int> roots(n);
-  vector<int> root_nodes; // list of all roots in the new graph
-  vector<vector<int>> adj_scc(n);
-  // do regular kusaraju-sharir and then ...
-  for (auto &u : order){
-    if (!visited[u]){
-      dfs2(u);
-      int root = component.front();
-      for (auto &v : component){
-        roots[v] = root;
-      }
-      root_nodes.push_back(root);
-      component.clear();
-    }
-  }
-  for (int u = 0; u < n; u++){
-    for (auto v : g[u]){
-      int root_u = roots[u], root_v = roots[v];
-      if (root_u != root_v){
-        adj_scc[root_u].push_back(root_v);
+  // Second DFS pass on the transpose graph to mark SCCs
+  inline void dfs2(int u, int id) {
+    components[u] = id;
+    for (int v : rev_adj[u]) {
+      if (components[v] == -1) {
+        dfs2(v, id);
       }
     }
   }
-  // now do something with add
-}
 
+  // Runs the Kosaraju algorithm
+  // Returns the total number of strongly connected components.
+  inline int buildSCC() {
+    if (num_components != -1) {
+      return num_components;
+    }
+
+    // 1) Run DFS on original graph to get ordering by exit time
+    for (int i = 0; i < n; i++) {
+      if (!visited[i]) {
+        dfs1(i);
+      }
+    }
+
+    // 2) Process vertices in decreasing order of exit times
+    reverse(order.begin(), order.end());
+
+    // 3) Run DFS on the transpose graph in that order
+    num_components = 0;
+    for (int v : order) {
+      if (components[v] == -1) {
+        dfs2(v, num_components);
+        num_components++;
+      }
+    }
+    return num_components;
+  }
+
+  // Returns a vector of components, where each component contains
+  // the vertices in that component.
+  inline vector<vector<int>> getComponents() {
+    if (num_components == -1) {
+      buildSCC();
+    }
+    vector<vector<int>> comps(num_components);
+    for (int v = 0; v < n; v++) {
+      comps[components[v]].push_back(v);
+    }
+    return comps;
+  }
+
+  // Builds a condensed graph where each vertex represents an SCC.
+  inline vector<vector<int>> getCondensedGraph() {
+    if (num_components == -1) {
+      buildSCC();
+    }
+    vector<vector<int>> adj_cond(num_components);
+    for (int u = 0; u < n; u++) {
+      int root_u = components[u];
+      for (int v : adj[u]) {
+        int root_v = components[v];
+        if (root_u != root_v) {
+          adj_cond[root_u].push_back(root_v);
+        }
+      }
+    }
+    return adj_cond;
+  }
+};
