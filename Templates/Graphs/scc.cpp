@@ -96,6 +96,8 @@ struct SCC {
     return adj_cond;
   }
 
+  // Returns a pair of vertices that do not have a path between them
+  // If all vertices are in the same SCC, returns {-1, -1}
   inline array<int, 2> pairWithNoPath() {
     vector<bool> visited(n, false);
     dfs(0, adj, visited);
@@ -110,6 +112,14 @@ struct SCC {
       return {i, 0};
     }
     return {-1, -1};
+  }
+
+  // Returns the component id of a vertex
+  inline int getId(int u) {
+    if (num_components == -1) {
+      buildSCC();
+    }
+    return components[u];
   }
 
 private:
