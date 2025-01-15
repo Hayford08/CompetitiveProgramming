@@ -95,4 +95,37 @@ struct SCC {
     }
     return adj_cond;
   }
+
+  inline array<int, 2> pairWithNoPath() {
+    vector<bool> visited(n, false);
+    dfs(0, adj, visited);
+    for (int i = 0; i < n; i++) {
+      if (visited[i]) continue;
+      return {0, i};
+    } 
+    visited.assign(n, false);
+    dfs(0, rev_adj, visited);
+    for (int i = 0; i < n; i++) {
+      if (visited[i]) continue;
+      return {i, 0};
+    }
+    return {-1, -1};
+  }
+
+private:
+  // performs a DFS from a given vertex
+  inline void dfs(int u, vector<vector<int>> &adj, vector<bool> &visited) {
+    vector<int> stack = {u};
+    visited[u] = true;
+    while (stack.size()) {
+      u = stack.back();
+      stack.pop_back();
+      for (int v : adj[u]) {
+        if (!visited[v]) {
+          visited[v] = true;
+          stack.push_back(v);
+        }
+      }
+    }
+  }
 };
