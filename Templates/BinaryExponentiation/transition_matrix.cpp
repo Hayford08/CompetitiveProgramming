@@ -30,7 +30,7 @@ Matrix pow(Matrix T, int b) {
       result = mul(result, T);
     }
     T = mul(T, T);
-    b /= 2;
+    b >>= 1;
   }
   return result;
 }

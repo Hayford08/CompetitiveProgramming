@@ -4,6 +4,15 @@
 using namespace std;
 using namespace __gnu_pbds;
 
+struct FastIO {
+  FastIO() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+    cout << fixed << setprecision(10);
+  }
+} fast_io;
+
 #define int int64_t
 
 template <class T>
@@ -44,9 +53,6 @@ inline void solve(){
 
 #undef int
 int main(){
-  ios_base::sync_with_stdio(false);
-  cin.tie(0);
-
   int t = 1;
   if (multi) {
     cin >> t;
