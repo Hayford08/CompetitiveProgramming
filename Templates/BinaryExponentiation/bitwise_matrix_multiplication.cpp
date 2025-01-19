@@ -25,6 +25,8 @@ vector<int> bitwiseMatMul(const vector<int> &X, const vector<int> &Y, int B) {
 
 */
 
+// bitwise matrix multiplication for n x n matrices
+// A and B are n x 1 vectors of integers (0 <= A[i], B[i] < 64)
 Matrix mul(const Matrix &A, const Matrix &B) {
   int n = A.size();
   Matrix result(n, 0);
@@ -39,7 +41,11 @@ Matrix mul(const Matrix &A, const Matrix &B) {
   return result;
 }
 
-Matrix pow(Matrix M, int b, int n) {
+
+// bitwise matrix exponentiation for n x n matrices
+// M is an n x n matrix of integers (0 <= M[i][j] < 64)
+Matrix pow(Matrix M, int b) {
+  int n = M.size();
   Matrix result(n, 0);
   for (int i = 0; i < n; i++) {
     result[i] = 1LL << i;
