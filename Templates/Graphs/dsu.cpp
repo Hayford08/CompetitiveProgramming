@@ -32,4 +32,8 @@ struct DSU {
     components--;
     return true;
   }
+
+  inline bool same(int a, int b){
+    return find(a) == find(b);
+  }
 };

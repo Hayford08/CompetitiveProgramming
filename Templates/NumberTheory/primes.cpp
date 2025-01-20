@@ -36,9 +36,12 @@ vector<int> spf(int x) {
   vector<int> res(x + 1);
   iota(res.begin(), res.end(), 0);
   for (int i = 2; i * i <= x; i++) {
-    if (res[i] != i) continue;
-    for (int j = i * i; j <= x; j += i) {
-      res[j] = i;
+    if (res[i] == i) {
+      for (int j = i * i; j <= x; j += i) {
+        if (res[j] == j) {
+          res[j] = i;
+        }
+      }
     }
   }
   return res;
