@@ -3,14 +3,13 @@
 using namespace std;
 
 struct Fenwick{
-  int n;
+  int n, cnt, mask;
   vector<int> tree;
-  int cnt;
-  Fenwick(int _n) : n(_n), tree(_n), cnt(0){
-    
+  Fenwick(int _n) : n(_n), cnt(0), mask(1), tree(_n) {
+    while (mask < n) mask <<= 1;
   }
 
-  Fenwick(vector<int> &arr) : n(arr.size()), tree(arr.size()), cnt(arr.size()) {
+  Fenwick(vector<int> &arr) : n(arr.size()), cnt(arr.size()), mask(1),  tree(arr.size()) {
     // 0 - based indexing
     for (int i = 0; i < n; i++){
       tree[i] += arr[i];
@@ -19,6 +18,7 @@ struct Fenwick{
         tree[r] += arr[i];
       }
     }
+    while (mask < n) mask <<= 1;
   }
 
   int sum(int r) {
@@ -57,19 +57,15 @@ struct Fenwick{
   }
 
   int lower_bound(int x) {
-    int idx = -1;
-    int mask = 1;
-    while (mask * 2 <= n) {
-      mask <<= 1;
-    }
+    int idx = -1, bit = mask;
     int sum = 0;
-    while (mask > 0) {
-      int nidx = idx + mask;
+    while (bit > 0) {
+      int nidx = idx + bit;
       if (nidx < n && sum + tree[nidx] < x) {
         sum += tree[nidx];
         idx = nidx;
       }
-      mask >>= 1;
+      bit >>= 1;
     }
     return idx + 1;
   }
