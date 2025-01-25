@@ -1,10 +1,10 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <math.h>
 using namespace std;
 
 // Motivational problem: Add to a range and query for maximum
-
 struct LazySegmentTree {
   private:
     int n;
@@ -20,7 +20,7 @@ struct LazySegmentTree {
         tree[tidx] = arr[tl];
         return;
       }
-      int tm = tl + (tr - tr) / 2;
+      int tm = tl + (tr - tl) / 2;
       int lchild = tidx + 1;
       int rchild = tidx + 2 * (tm - tl + 1);
       build(arr, lchild, tl, tm);
@@ -80,6 +80,10 @@ struct LazySegmentTree {
 
     int range_query(int l, int r){
       return range_query(0, 0, n - 1, l, r);
+    }
+
+    int point_query(int pos){
+      return range_query(pos, pos);
     }
 };
 
