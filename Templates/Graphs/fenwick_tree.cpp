@@ -55,4 +55,22 @@ struct Fenwick{
   int count_gt(int x){
     return cnt - sum(x);
   }
+
+  int lower_bound(int x) {
+    int idx = -1;
+    int mask = 1;
+    while (mask * 2 <= n) {
+      mask <<= 1;
+    }
+    int sum = 0;
+    while (mask > 0) {
+      int nidx = idx + mask;
+      if (nidx < n && sum + tree[nidx] < x) {
+        sum += tree[nidx];
+        idx = nidx;
+      }
+      mask >>= 1;
+    }
+    return idx + 1;
+  }
 };
