@@ -31,8 +31,9 @@ inline void pout(const T& first, const Args&... args) {
   pout(args...);
 }
 
-inline void pout(const vector<int> &v) {
-  for (const int &x : v) {
+template <typename T>
+inline void pout(const vector<T> &v) {
+  for (const T &x : v) {
     cout << x << " ";
   }
   cout << "\n";
