@@ -13,8 +13,6 @@ struct FastIO {
   }
 } fast_io;
 
-#define int int64_t
-
 template <class T>
 using ordered_multiset = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
 // X.find_by_order(k) return kth element. 0 indexed.
@@ -46,6 +44,7 @@ inline void print_flush(const T& value) {
 }
 
 bool multi = true;
+// #define int int64_t // Be careful with this. It can cause TLE / MLE
 inline void solve(){
   int n;
   cin >> n;
