@@ -16,7 +16,7 @@ bool is_prime[MX];
 void sieve() {
   fill(is_prime, is_prime + MX, true);
   is_prime[0] = is_prime[1] = false;
-  for (int i = 2; 1ll * i * i < MX; i++) {
+  for (int i = 2; 1ll * i < MX; i++) {
     if (is_prime[i]) {
       primes.push_back(i);
       for (int j = 1ll * i * i; j < MX; j += i) {

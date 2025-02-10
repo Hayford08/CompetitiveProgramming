@@ -44,9 +44,9 @@ inline void print_flush(const T& value) {
 }
 
 bool multi = true;
-// #define int int64_t // Be careful with this. It can cause TLE / MLE
+// #define int int64_t // careful with MLE / TLE
 inline void solve(){
-  int n;
+  int n;  
   cin >> n;
   return;
 }

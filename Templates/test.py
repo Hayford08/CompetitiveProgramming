@@ -1,13 +1,18 @@
-cnt = 0
-st = set()
-for a in range(100, 1001):
-  for b in range(100, 1001):
-    if a == b or a + b != 1000:
+from functools import cache
+@cache
+def solve(n):
+  if n < 10:
+    return 1 
+  s = str(n)
+  res = 0 
+  for c in s:
+    if c == '0':
       continue
-    sa = str(a)
-    sb = str(b)
-    if sorted(sa) == sorted(sb):
-      st.add((a, b))
+    if solve(n - int(c)) == 0:
+      res = 1
+  return res
 
-print(st)
-print(len(st))
+N = 5000
+for i in range(1, N + 1):
+  if solve(i) == 0:
+    print(i)

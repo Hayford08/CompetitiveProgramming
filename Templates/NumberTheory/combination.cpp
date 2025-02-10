@@ -2,20 +2,20 @@
 using namespace std;
 
 #define int int64_t
-constexpr int MOD = 1e9 + 7;
-inline long long add(long long a, long long b, long long mod) {
+constexpr long long MOD = 1e9 + 7;
+inline long long add(long long a, long long b, long long mod = MOD) {
   a %= mod;
   b %= mod;
   return (((a + b) % mod) + mod) % mod;
 }
 
-inline long long mul(long long a, long long b, int mod) {
+inline long long mul(long long a, long long b, long long mod = MOD) {
   a %= mod;
   b %= mod;
   return (a * b) % mod;
 }
 
-inline long long pow_mod(long long a, long long b, long long mod) {
+inline long long pow_mod(long long a, long long b, long long mod = MOD) {
   if (b < 0) {
     return pow_mod(pow_mod(a, -b, mod), mod - 2, mod);
   }

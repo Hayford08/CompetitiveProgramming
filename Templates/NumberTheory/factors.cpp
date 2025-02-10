@@ -44,7 +44,6 @@ int sum_of_divisors_from_1_to_n(int n) {
       int res = (x * (x + 1)) % MOD;
       return (res * INV_MOD2) % MOD;
     };
-  
     return (sum(b) - sum(a - 1) + MOD) % MOD;
   };
 
