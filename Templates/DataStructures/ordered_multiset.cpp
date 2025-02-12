@@ -46,7 +46,7 @@ struct OrderedMultiset {
   }
 
   inline int countLessThanOrEqual(const T& x) {
-    return st.order_of_key({x, std::numeric_limits<int>::max()});
+    return st.order_of_key({x, id});
   }
 
   inline int size() {
