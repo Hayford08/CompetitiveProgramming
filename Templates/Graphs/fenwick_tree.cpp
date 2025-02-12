@@ -70,3 +70,4 @@ struct Fenwick{
     return idx + 1;
   }
 };
+
