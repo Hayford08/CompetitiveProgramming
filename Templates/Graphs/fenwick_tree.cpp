@@ -56,6 +56,10 @@ struct Fenwick{
     return cnt - sum(x);
   }
 
+  int count(int x){
+    return sum(x) - sum(x - 1);
+  }
+
   int lower_bound(int x) {
     int idx = -1, bit = mask;
     int sum = 0;

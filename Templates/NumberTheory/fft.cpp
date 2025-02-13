@@ -4,6 +4,7 @@ using namespace std;
 using cd = complex<double>;
 const double PI = acos(-1);
 
+// Fast Fourier Transform
 inline void fft(vector<cd> &a, bool invert) {
   int n = a.size();
   for (int i = 1, j = 0; i < n; i++) {
@@ -37,20 +38,21 @@ inline void fft(vector<cd> &a, bool invert) {
   }
 }
 
+// convolution of two polynomials
 inline vector<int> multiply(const vector<int> &a, const vector<int> &b) {
   vector<cd> fa(a.begin(), a.end()), fb(b.begin(), b.end());
   int n = 1, sz = a.size() + b.size();
   while (n < sz) n <<= 1;
   fa.resize(n); fb.resize(n);
 
+  // evaluate polynomial
   fft(fa, false);
   fft(fb, false);
-
   for (int i = 0; i < n; i++) {
     fa[i] *= fb[i];
   }
+  // interpolate polynomial
   fft(fa, true);
-
   vector<int> res(n);
   for (int i = 0; i < n; i++) {
     res[i] = round(fa[i].real());

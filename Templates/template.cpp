@@ -6,7 +6,7 @@ struct FastIO {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
-    cout << fixed << setprecision(10);
+    cout << fixed << setprecision(15);
   }
 } fast_io;
 
