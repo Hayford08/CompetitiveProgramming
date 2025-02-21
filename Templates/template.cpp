@@ -29,14 +29,8 @@ inline void pout(const vector<T> &v) {
   cout << "\n";
 }
 
-// For interactive problems
-template <typename T>
-inline void print_flush(const T& value) {
-  cout << value << "\n" << flush;
-}
-
 bool multi = true;
-// #define int int64_t // careful with MLE / TLE
+#define int int64_t // careful with MLE / TLE
 inline void solve(){
   int n;  
   cin >> n;
