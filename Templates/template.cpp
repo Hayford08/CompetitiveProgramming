@@ -10,23 +10,24 @@ struct FastIO {
   }
 } fast_io;
 
-template <typename T>
-inline void pout(const T& value) {
-  std::cout << value << "\n";
-}
-
-template <typename T, typename... Args>
-inline void pout(const T& first, const Args&... args) {
-  std::cout << first << " ";
-  pout(args...);
-}
-
-template <typename T>
-inline void pout(const vector<T> &v) {
-  for (const T &x : v) {
-    cout << x << " ";
+namespace cp {
+  template <typename T>
+  void print(const T &value) {
+    cout << value << "\n";
   }
-  cout << "\n";
+
+  template <typename T, typename... Args>
+  void print(const T &first, const Args &... args) {
+    cout << first << " ";
+    print(args...);
+  }
+
+  template <typename T>
+  void print(const vector<T> &v) {
+    for (const T &x : v)
+      cout << x << " ";
+    cout << "\n";
+  }
 }
 
 bool multi = true;

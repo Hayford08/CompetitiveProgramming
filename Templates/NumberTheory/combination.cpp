@@ -54,7 +54,7 @@ struct Comb {
     if (r == 0 || r == n) {
       return 1;
     }
-    return mul(fact[n], mul(invFact[r], invFact[n - r], mod), mod);
+    return mul(fact[n], mul(invFact[r], invFact[n  - r], mod), mod);
   }
 
   inline long long stars_and_bars(int stars, int slots) {
