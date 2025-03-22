@@ -4,13 +4,13 @@
 #include <math.h>
 using namespace std;
 
-// Motivational problem: Add to a range and query for maximum
+// Motivational problem: Add to a range and query for maximum element in a range from 0 to pos
 struct LazySegmentTree {
   private:
+    const int INF = 1e9;
     int n;
     vector<int> tree, lazy;
-    const int INF = 1e9;
-
+    
     int combine(int lval, int rval){
       return max(lval, rval);
     }
@@ -52,6 +52,7 @@ struct LazySegmentTree {
       push(tidx, lchild, rchild);
       range_update(lchild, tl, tm, l, min(r, tm), val);
       range_update(rchild, tm + 1, tr, max(l, tm + 1), r, val);
+      tree[tidx] = combine(tree[lchild], tree[rchild]);
     }
 
     int range_query(int tidx, int tl, int tr, int l, int r) {
@@ -69,16 +70,47 @@ struct LazySegmentTree {
                      range_query(rchild, tm + 1, tr, max(l, tm + 1), r));
     }
 
+    void point_update(int tidx, int tl, int tr, int pos, int val) {
+      if (tl == tr){
+        tree[tidx] = val;
+        lazy[tidx] = 0;
+        return;
+      }
+      int tm = tl + (tr - tl) / 2;
+      int lchild = tidx + 1;
+      int rchild = tidx + 2 * (tm - tl + 1);
+      push(tidx, lchild, rchild);
+      if (pos <= tm){
+        point_update(lchild, tl, tm, pos, val);
+      }
+      else{
+        point_update(rchild, tm + 1, tr, pos, val);
+      }
+      tree[tidx] = combine(tree[lchild], tree[rchild]);
+    }
+
   public:
-    LazySegmentTree(vector<int> &arr) : n((int)arr.size()), tree(2 * (int)arr.size() + 1), lazy(2 * (int)arr.size()) {
+    LazySegmentTree(vector<int> &arr) : n((int)arr.size()), tree(2 * (int)arr.size() + 1), lazy(2 * (int)arr.size() + 1) {
       build(arr, 0, 0, n - 1);
     }
 
+    LazySegmentTree(int n) : n(n), tree(2 * n + 1, -INF), lazy(2 * n + 1) {}
+
     void range_update(int l, int r, int val){
+      if (l > r){
+        return;
+      }
       range_update(0, 0, n - 1, l, r, val);
     }
 
-    int range_query(int l, int r){
+    void point_update(int pos, int val){
+      point_update(0, 0, n - 1, pos, val);
+    }
+
+    int range_query(int l, int r) {
+      if (l > r){
+        return -INF;
+      }
       return range_query(0, 0, n - 1, l, r);
     }
 
