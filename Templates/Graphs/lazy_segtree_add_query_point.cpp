@@ -113,6 +113,7 @@ struct LazySegmentTree {
       push(tidx, lchild, rchild);
       range_update(lchild, tl, tm, l, min(tm, r), val);
       range_update(rchild, tm + 1, tr, max(tm + 1, l), r, val);
+      tree[tidx] = combine(tree[lchild], tree[rchild]);
     }
 
     int point_query(int tidx, int tl, int tr, int pos){

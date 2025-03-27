@@ -4,16 +4,19 @@ using namespace std;
 template <typename T, typename Merge, typename Update>
 struct ReRootDp {
   const vector<vector<int>>& adj;
-  T base;
-  vector<T> res;
+  vector<T> base;
   Merge merge;
   Update update;
+  vector<T> res;
 
-  ReRootDp(const vector<vector<int>>& adj, T base, Merge merge, Update update)
-      : adj(adj), base(base), res(adj.size(), base), merge(merge), update(update) {}
+  ReRootDp(const vector<vector<int>>& adj, vector<T> base, Merge merge, Update update)
+      : adj(adj), base(base), merge(merge), update(update), res(adj.size()) {}
+
+    ReRootDp(const vector<vector<int>>& adj, T base, Merge merge, Update update)
+      : adj(adj), base(adj.size(), base), merge(merge), update(update) {}
 
   inline T dfs(int u, int par = -1) {
-    T curr = base;
+    T curr = base[u];
     for (const int& v : adj[u]) {
       if (v == par) continue;
       curr = merge(curr, dfs(v, u));
@@ -36,7 +39,12 @@ struct ReRootDp {
   }
 };
 
-// Factory function to deduce Merge and Update types
+// Factory functions to deduce Merge and Update types
+template <typename T, typename Merge, typename Update>
+ReRootDp<T, Merge, Update> make_ReRootDp(const vector<vector<int>>& adj, vector<T> base, Merge merge, Update update) {
+  return ReRootDp<T, Merge, Update>(adj, base, merge, update);
+}
+
 template <typename T, typename Merge, typename Update>
 ReRootDp<T, Merge, Update> make_ReRootDp(const vector<vector<int>>& adj, T base, Merge merge, Update update) {
   return ReRootDp<T, Merge, Update>(adj, base, merge, update);
