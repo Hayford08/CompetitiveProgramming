@@ -36,4 +36,19 @@ struct DSU {
   inline bool same(int a, int b){
     return find(a) == find(b);
   }
+
+  inline vector<vector<int>> groups() {
+    vector<vector<int>> res;
+    int n = parent.size();
+    vector<int> group(n, -1);
+    for (int i = 0; i < n; i++) {
+      int root = find(i);
+      if (group[root] == -1) {
+        group[root] = res.size();
+        res.push_back({});
+      }
+      res[group[root]].push_back(i);
+    }
+    return res;
+  }
 };
