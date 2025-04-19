@@ -90,18 +90,19 @@ inline string convertBase(string num, int baseFrom, int baseTo) {
   };
 
   while(!num.empty()) {
-      int carry = 0;
-      string quotient = "";
-      for(char c : num) {
-          int cur = carry * baseFrom + charToValue(c);
-          int q = cur / baseTo;
-          carry = cur % baseTo;
-          if(!quotient.empty() || q != 0)
-              quotient.push_back(valueToChar(q));
+    int carry = 0;
+    string quotient = "";
+    for(char c : num) {
+      int cur = carry * baseFrom + charToValue(c);
+      int q = cur / baseTo;
+      carry = cur % baseTo;
+      if(!quotient.empty() || q != 0) {
+        quotient.push_back(valueToChar(q));
       }
-      res.push_back(valueToChar(carry));
-      num = quotient;
+    }
+    res.push_back(valueToChar(carry));
+    num = quotient;
   }
-  reverse(res.begin(), res.end());
+  ranges::reverse(res);
   return res;
 }
