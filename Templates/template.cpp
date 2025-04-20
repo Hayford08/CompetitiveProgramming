@@ -1,3 +1,6 @@
+#ifdef __cplusplus
+#define _Alignof(type) __alignof__(type)
+#endif
 #include <bits/stdc++.h>
 using namespace std;
 
