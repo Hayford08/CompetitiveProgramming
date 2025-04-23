@@ -74,4 +74,31 @@ void sieve() {
   }
 }
 */
+
+vector<vector<pair<int, int>>> primeFactors;
+inline void primeFactorize(int n) {
+  primeFactors = vector<vector<pair<int, int>>>(n + 1);
+  vector<int> spf(n + 1);
+  ranges::iota(spf, 0);
+  for (int i = 2; i <= n; i++) {
+    if (spf[i] != i) continue;
+    for (int j = i; j <= n; j += i) {
+      if (spf[j] == j) {
+        spf[j] = i;
+      }
+    }
+  }
+  for (int i = 2; i <= n; i++) {
+    int x = i;
+    while (x != 1) {
+      int p = spf[x];
+      int cnt = 0;
+      while (x % p == 0) {
+        x /= p;
+        cnt++;
+      }
+      primeFactors[i].emplace_back(p, cnt);
+    }
+  }
+}
   
