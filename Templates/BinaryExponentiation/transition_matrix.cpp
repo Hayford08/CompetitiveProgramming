@@ -5,7 +5,7 @@ using Matrix = vector<vector<long long>>;
 using Vector = vector<long long>;
 const long long MOD = 1e9 + 7;
 
-Matrix mul(const Matrix& A, const Matrix& B) {
+inline Matrix mul(const Matrix& A, const Matrix& B) {
   int rows = A.size(), cols = B[0].size();
   int inner = B.size();
   Matrix result(rows, Vector(cols, 0));
@@ -19,7 +19,7 @@ Matrix mul(const Matrix& A, const Matrix& B) {
   return result;
 }
     
-Matrix pow(Matrix T, int b) {
+inline Matrix pow(Matrix T, int b) {
   int n = T.size();
   Matrix result(n, Vector(n, 0));
   
@@ -35,7 +35,7 @@ Matrix pow(Matrix T, int b) {
   return result;
 }
 
-Vector apply_transitions(const Matrix& T, const Vector& V, int t) {
+inline Vector apply_transitions(const Matrix& T, const Vector& V, int t) {
   Matrix m = {V};
   return mul(m, pow(T, t))[0];
 }
