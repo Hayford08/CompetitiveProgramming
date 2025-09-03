@@ -49,6 +49,19 @@ struct OrderedMultiset {
     return st.order_of_key({x, id});
   }
 
+  inline int countGe(const T &x) {
+    return st.size() - countLessThan(x);
+  }
+
+  inline T back() {
+    return prev(st.end())->first;
+  }
+
+  inline void pop() {
+    auto it = prev(st.end());
+    st.erase(it);
+  }
+
   inline int size() {
     return st.size();
   }
