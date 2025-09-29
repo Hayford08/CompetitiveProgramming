@@ -1,8 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-using Matrix = vector<vector<long long>>;
-using Vector = vector<long long>;
+using Matrix = vector<vector<int>>;
+using Vector = vector<int>;
 const long long MOD = 1e9 + 7;
 
 inline Matrix mul(const Matrix& A, const Matrix& B) {
@@ -12,13 +12,18 @@ inline Matrix mul(const Matrix& A, const Matrix& B) {
   for (int i = 0; i < rows; ++i) {
     for (int j = 0; j < cols; ++j) {
       for (int k = 0; k < inner; ++k) {
-        result[i][j] = (result[i][j] + A[i][k] * B[k][j]) % MOD;
+        if (A[i][k] == 0 || B[k][j] == 0) continue;
+        long long tmp = result[i][j] + 1ll * A[i][k] * B[k][j];
+        if (tmp > MOD) {
+            tmp %= MOD;
+        }
+        result[i][j] = tmp;
       }
     }
   }
   return result;
 }
-    
+
 inline Matrix pow(Matrix T, int b) {
   int n = T.size();
   Matrix result(n, Vector(n, 0));
