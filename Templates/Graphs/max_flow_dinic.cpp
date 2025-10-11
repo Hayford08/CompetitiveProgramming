@@ -106,38 +106,98 @@ struct Dinic {
     return res;
   }
 
-  inline pair<long long, vector<vector<int>>> flowPaths() {
-    auto f = flow();
-    vector<vector<int>> paths;
-    vector<pair<int, long long>> parent(n);
-    while (true) {
-      fill(parent.begin(), parent.end(), make_pair(-1, INF));
-      parent[s] = {-2, INF};
-      q.push(s);
-      while (q.size()) {
-        auto u = q.front(); q.pop();
-        long long bneck = parent[u].second;
-        for (int e : adj[u]) {
-          int v = edges[e].v;
-          if (edges[e].flow <= 0 || parent[v].first != -1) continue;
-          parent[v] = {e, min(bneck, edges[e].flow)};
+  inline bool reachableWithFlow() {
+    fill(level.begin(), level.end(), -1);
+    level[s] = 0;
+    q.push(s);
+
+    while (q.size()) {
+      int u = q.front(); q.pop();
+      int lvl = level[u];
+      for (int e : adj[u]) {
+        int v = edges[e].v;
+        if (level[v] == -1 && edges[e].flow > 0) {
+          level[v] = lvl + 1;
           q.push(v);
         }
       }
-      if (parent[t].first == -1) break;
-      vector<int> path = {t};
-      int v = t;
-      auto bneck = parent[v].second;
-      while (v != s) {
-        int e = parent[v].first;
-        edges[e].flow -= bneck;
-        v = edges[e].u;
-        path.emplace_back(v);
+    }
+    return level[t] != -1;
+  }
+
+  inline long long dfs(int u, long long pushed, vector<int> &parent) {
+    if (u == t || pushed == 0) {
+      return pushed;
+    }
+    int lvl = level[u];
+    for (int sz = adj[u].size(), &nxt = nextEdge[u]; nxt < sz; nxt++) {
+      int e = adj[u][nxt];
+      int v = edges[e].v;
+      if (lvl + 1 != level[v] || edges[e].flow <= 0) continue;
+      long long f = dfs(v, min(pushed, edges[e].flow), parent);
+      if (f > 0) {
+        parent[v] = u;
+        edges[e].flow -= f;
+        return f;
       }
-      reverse(path.begin(), path.end());
-      paths.emplace_back(path);
+    }
+    return 0;
+  }
+
+  inline pair<long long, vector<vector<int>>> flowPaths() {
+    auto f = flow();
+    vector<vector<int>> paths;
+    vector<int> parent(n);
+    while (reachableWithFlow()) {
+      fill(nextEdge.begin(), nextEdge.end(), 0);
+      fill(parent.begin(), parent.end(), -1);
+ 
+      while (dfs(s, INF, parent)) {
+        int v = t;
+        vector<int> path = {t};
+        while (v != s) {
+          v = parent[v];
+          path.emplace_back(v);
+        }
+        reverse(path.begin(), path.end());
+        paths.emplace_back(path);
+      }
     }
     return {f, paths};
   }
+
+  // inline pair<long long, vector<vector<int>>> flowPaths() {
+  //   auto f = flow();
+  //   vector<vector<int>> paths;
+  //   vector<pair<int, long long>> parent(n);
+  //   while (true) {
+  //     fill(parent.begin(), parent.end(), make_pair(-1, INF));
+  //     parent[s] = {-2, INF};
+  //     q.push(s);
+  //     while (q.size()) {
+  //       auto u = q.front(); q.pop();
+  //       long long bneck = parent[u].second;
+  //       for (int e : adj[u]) {
+  //         int v = edges[e].v;
+  //         if (edges[e].flow <= 0 || parent[v].first != -1) continue;
+  //         parent[v] = {e, min(bneck, edges[e].flow)};
+  //         q.push(v);
+  //       }
+  //     }
+  //     if (parent[t].first == -1) break;
+  //     vector<int> path = {t};
+  //     int v = t;
+  //     auto bneck = parent[v].second;
+  //     while (v != s) {
+  //       int e = parent[v].first;
+  //       edges[e].flow -= bneck;
+  //       v = edges[e].u;
+  //       path.emplace_back(v);
+  //     }
+  //     reverse(path.begin(), path.end());
+  //     paths.emplace_back(path);
+  //   }
+  //   return {f, paths};
+  // }
 
 };
