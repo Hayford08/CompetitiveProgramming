@@ -94,4 +94,50 @@ struct Dinic {
     }
     return {f, cuts};
   }
+
+  inline vector<pair<int, int>> maxBiMatching(int l, int r) {
+    flow();
+    vector<pair<int, int>> res;
+    for (const auto &edge : edges) {
+      if (l <= edge.u && edge.u <= r && edge.flow == 1) {
+        res.emplace_back(edge.u, edge.v);
+      }
+    }
+    return res;
+  }
+
+  inline pair<long long, vector<vector<int>>> flowPaths() {
+    auto f = flow();
+    vector<vector<int>> paths;
+    vector<pair<int, long long>> parent(n);
+    while (true) {
+      fill(parent.begin(), parent.end(), make_pair(-1, INF));
+      parent[s] = {-2, INF};
+      q.push(s);
+      while (q.size()) {
+        auto u = q.front(); q.pop();
+        long long bneck = parent[u].second;
+        for (int e : adj[u]) {
+          int v = edges[e].v;
+          if (edges[e].flow <= 0 || parent[v].first != -1) continue;
+          parent[v] = {e, min(bneck, edges[e].flow)};
+          q.push(v);
+        }
+      }
+      if (parent[t].first == -1) break;
+      vector<int> path = {t};
+      int v = t;
+      auto bneck = parent[v].second;
+      while (v != s) {
+        int e = parent[v].first;
+        edges[e].flow -= bneck;
+        v = edges[e].u;
+        path.emplace_back(v);
+      }
+      reverse(path.begin(), path.end());
+      paths.emplace_back(path);
+    }
+    return {f, paths};
+  }
+
 };

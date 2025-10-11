@@ -8,8 +8,9 @@ struct MaxFlow {
   vector<vector<long long>> capacity, rCapacity;
   vector<int> parent;
   set<pair<int, int>> edges;
+  int s, t;
 
-  MaxFlow(int n) : adj(n), capacity(n, vector<long long>(n)), rCapacity(n, vector<long long>(n)), parent(n) {}
+  MaxFlow(int n, int s, int t) : adj(n), capacity(n, vector<long long>(n)), rCapacity(n, vector<long long>(n)), parent(n), s(s), t(t) {}
 
   void add(int u, int v, int c) {
     adj[u].push_back(v);
@@ -19,7 +20,7 @@ struct MaxFlow {
     // capacity[v][u] += c // for undirected graph
   }
 
-  long long bfs(int s, int t) {
+  long long bfs() {
     ranges::fill(parent, -1);
     parent[s] = -2;
 
@@ -42,9 +43,9 @@ struct MaxFlow {
     return 0ll;
   }
 
-  long long compute(int s, int t) {
+  long long flow() {
     long long maxFlow = 0, currFlow = 0;
-    while ((currFlow = bfs(s, t)) > 0) {
+    while ((currFlow = bfs()) > 0) {
       maxFlow += currFlow;
       int curr = t;
       while (curr != s) {
@@ -61,8 +62,8 @@ struct MaxFlow {
   }
 
   pair<long long, vector<pair<int, int>>> minCuts(int s, int t) {
-    long long maxFlow = compute(s, t);
-    bfs(s, t);
+    long long maxFlow = flow();
+    bfs();
     vector<pair<int, int>> cuts;
     for (const auto &[u, v] : edges) {
       int cnt = (parent[u] == -1) + (parent[v] == -1);
@@ -74,11 +75,11 @@ struct MaxFlow {
   }
 
   pair<long long, vector<vector<int>>> maxFlowWithPaths(int s, int t) {
-    long long maxFlow = compute(s, t);
+    long long maxFlow = flow();
     vector<vector<int>> paths;
     capacity = rCapacity;
     long long flow = 0;
-    while ((flow = bfs(s, t)) > 0) {
+    while ((flow = bfs()) > 0) {
       vector<int> path = {t};
       int v = t;
       while (v != s) {
@@ -91,6 +92,17 @@ struct MaxFlow {
       paths.push_back(path);
     }
     return {maxFlow, paths};
+  }
+
+  inline vector<pair<int, int>> maxBipartiteMatching(int l, int r) {
+    flow();
+    vector<pair<int, int>> res;
+    for (const auto &[u, v] : edges) {
+      if (l <= u && u <= r && capacity[u][v] == 0) {
+        res.emplace_back(u, v);
+      }
+    }
+    return res;
   }
 
 };
