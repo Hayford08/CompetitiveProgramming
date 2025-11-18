@@ -31,11 +31,11 @@ using namespace std;
 template <typename T>
 struct Prefix {
   vector<T> pref;
-
+  int n;
   Prefix() {}
 
   Prefix(const vector<T> &arr) {
-    int n = arr.size();
+    n = arr.size();
     pref.resize(n + 1);
     pref[0] = 0;
     for (int i = 1; i <= n; i++) {
@@ -44,12 +44,12 @@ struct Prefix {
   }
 
   T query(int l, int r) {
-    if (l > r || r < 0) return T{};
+    if (l > r || !(0 <= r && r <= n)) return T{};
     return pref[r] - (l > 0 ? pref[l - 1] : 0);
   }
 
   T query(int r) {
-    if (r < 0) return T{};
+    if (!(0 <= r && r <= n)) return T{};
     return pref[r];
   }
 };
