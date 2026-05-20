@@ -4,6 +4,7 @@
 #include <numeric>
 #include <bit>
 #include <bitset>
+#include <cmath>
 
 using namespace std;
 
@@ -33,8 +34,9 @@ void build(){
   }
 }
 
+// for sum queries in [l, r]
 int query(int l, int r){ // assuming 0-indexing
-  int res = 0; // default value of choice
+  int res = 0; 
   for (int i = K; i >= 0; i--){
     if ((1 << i) <= r - l + 1){
       res += sp_tree[i][l];
@@ -47,8 +49,7 @@ int query(int l, int r){ // assuming 0-indexing
 
 // for range minimum queries --> answer queries in O(1)
 int min_query(int l, int r){
-  // int i = bit_width(r - l + 1) - 1;
-  int i = log2(r - l + 1);
+  int i = bit_width((unsigned long)r - l + 1) - 1;
   return min(sp_tree[i][l], sp_tree[i][r - (1 << i) + 1]);
 }
 
