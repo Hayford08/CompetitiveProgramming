@@ -1,69 +1,77 @@
 #include <bits/stdc++.h>
+#include <bit>
 using namespace std;
 
-// using min as func but can be changed to max, gcd but not sum, xor
 struct SparseTable2D {
-  constexpr static int K1 = 8; // log2(200) + 1
-  constexpr static int K2 = 8;
-  vector<vector<int>> st[K1 + 1][K2 + 1];
+  int n, m, K1, K2;
+  vector<vector<vector<int>>> st;
 
-  SparseTable2D(const vector<vector<int>> &mat) {
-    int n = mat.size();
-    int m = mat[0].size();
-    for (int l1 = 0; l1 <= K1; l1++) {
-      for (int l2 = 0; l2 <= K2; l2++) {
-        st[l1][l2] = vector<vector<int>>(n, vector<int>(m));
+  int id(int x, int y) const {
+    return x * m + y;
+  }
+
+  int lg(int x) const {
+    return std::bit_width((unsigned)x) - 1;
+  }
+
+  int func(int a, int b) const {
+    return max(a, b);
+  }
+
+  int func4(int a, int b, int c, int d) const {
+    return max(max(a, b), max(c, d));
+  }
+
+  SparseTable2D(const vector<vector<int>>& a) {
+    n = a.size();
+    m = a[0].size();
+
+    K1 = lg(n) + 1;
+    K2 = lg(m) + 1;
+
+    st.assign(K1, vector<vector<int>>(K2, vector<int>(n * m)));
+
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < m; j++) {
+        st[0][0][id(i, j)] = a[i][j];
       }
     }
 
-    st[0][0] = mat;
-    for (int l1 = 1; l1 <= K1; l1++) {
-      int pLen = 1 << (l1 - 1);
-      for (int i = 0; i + (1 << l1) <= n; i++) {
-        for (int j = 0; j < m; j++) {
-          st[l1][0][i][j] = func(st[l1 - 1][0][i][j], st[l1 - 1][0][i + pLen][j]);
-        }
-      }
-    }
-    for (int l2 = 1; l2 <= K2; l2++) {
-      int pLen = 1 << (l2 - 1);
-      for (int i = 0; i < n; i++) {
-        for (int j = 0; j + (1 << l2) <= m; j++) {
-          st[0][l2][i][j] = func(st[0][l2 - 1][i][j], st[0][l2 - 1][i][j + pLen]);
-        }
-      }
-    }
-    for (int l1 = 1; l1 <= K1; l1++) {
-      int p1Len = 1 << (l1 - 1);
-      for (int l2 = 1; l2 <= K2; l2++) {
-        int p2Len = 1 << (l2 - 1);
-        for (int i = 0; i + (1 << l1) <= n; i++) {
-          for (int j = 0; j + (1 << l2) <= m; j++) {
-            st[l1][l2][i][j] = func(st[l1 - 1][l2 - 1][i][j], st[l1 - 1][l2 - 1][i][j + p2Len], 
-                              st[l1 - 1][l2 - 1][i + p1Len][j], st[l1 - 1][l2 - 1][i + p1Len][j + p2Len]);
+    for (int k1 = 0; k1 < K1; k1++) {
+      for (int k2 = 0; k2 < K2; k2++) {
+        if (k1 == 0 && k2 == 0) continue;
+
+        for (int i = 0; i + (1 << k1) <= n; i++) {
+          for (int j = 0; j + (1 << k2) <= m; j++) {
+            if (k1 > 0) {
+              st[k1][k2][id(i, j)] = func(
+                st[k1 - 1][k2][id(i, j)],
+                st[k1 - 1][k2][id(i + (1 << (k1 - 1)), j)]
+              );
+            } else {
+              st[k1][k2][id(i, j)] = func(
+                  st[k1][k2 - 1][id(i, j)],
+                  st[k1][k2 - 1][id(i, j + (1 << (k2 - 1)))]
+              );
+            }
           }
         }
       }
     }
   }
 
-  int query(int x1, int y1, int x2, int y2) {
-    int l1 = log2(x2 - x1 + 1);
-    int l2 = log2(y2 - y1 + 1);
-    return func(st[l1][l2][x1][y1], st[l1][l2][x1][y2 - (1 << l2) + 1], 
-                st[l1][l2][x2 - (1 << l1) + 1][y1], st[l1][l2][x2 - (1 << l1) + 1][y2 - (1 << l2) + 1]);
-  }
+  int query(int x1, int y1, int x2, int y2) const {
+    int k1 = lg(x2 - x1 + 1);
+    int k2 = lg(y2 - y1 + 1);
 
-private:
-  int log2(int x) {
-    return std::bit_width((unsigned long)x) - 1;
-  }
+    int nx = x2 - (1 << k1) + 1;
+    int ny = y2 - (1 << k2) + 1;
 
-  int func(int x, int y) {
-    return min(x, y);
-  }
-  
-  int func(int a, int b, int c, int d) {
-    return min({a, b, c, d});
+    return func4(
+      st[k1][k2][id(x1, y1)],
+      st[k1][k2][id(x1, ny)],
+      st[k1][k2][id(nx, y1)],
+      st[k1][k2][id(nx, ny)]
+    );
   }
 };
